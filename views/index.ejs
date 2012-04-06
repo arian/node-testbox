@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+	<head>
+
+		<meta charset="utf-8">
+		<title>Testing</title>
+
+		<style>
+			body {
+				padding-left: 50px;
+			}
+			iframe {
+				width: 100%;
+				border: 1px solid #ddd;
+			}
+			iframe:hover {
+				height: 500px;
+			}
+			#mocha {
+				margin-bottom: 50px;
+			}
+		</style>
+
+		<link rel="stylesheet" href="./mocha.css" type="text/css">
+		<script src="./mocha.js"></script>
+		<script src="./expect.js"></script>
+
+	</head>
+	<body>
+
+		<div id="mocha"></div>
+
+		<script>
+
+			mocha.setup({
+				ui: 'bdd',
+				ignoreLeaks: true // ignore, because of iframes in the window with IE
+			})
+
+			var queries = location.search
+				? location.search.slice(1).split(',')
+				: []
+			<% if (tests.length){ %>
+			queries = "<%= tests %>".split(',')
+			<% } %>
+			var dones = {}
+
+			var finish = function(search, result){
+				dones[search](result)
+			}
+
+			describe('All test suites', function(){
+
+				for (var i = 0; i < queries.length; i++) (function(query){
+
+					var iframe = document.createElement('iframe'),
+						search = '?test=' + encodeURI(query) + '&t=' + (+new Date).toString(36),
+						src    = './test.html' + search,
+						a      = document.createElement('a')
+
+					a.href      = src
+					a.innerHTML = queries[i]
+					a.setAttribute('target', '_blank')
+					document.body.appendChild(iframe)
+					document.body.insertBefore(a, iframe)
+
+					it('should pass all tests for ' + queries[i], function(done){
+
+						dones[search] = function(result){
+							try {
+								expect(result).to.be(0)
+								done()
+							} catch(e){
+								done(e)
+							}
+						}
+						iframe.src = src
+					})
+
+				})(queries[i])
+
+			})
+
+			mocha.run()
+
+		</script>
+
+	</body>
+</html>

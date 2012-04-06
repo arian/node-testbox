@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+	<head>
+
+		<meta charset="utf-8">
+		<title>Testing</title>
+		<link rel="stylesheet" href="./mocha.css" type="text/css">
+		<script src="./mocha.js"></script>
+
+	</head>
+	<body>
+
+		<div id="mocha"></div>
+
+		<script>
+
+			mocha.setup('bdd')
+
+			var script = document.createElement('script')
+			script.src = './test.js' + location.search
+			var loaded = false
+			var load = function(){
+				loaded = true
+				mocha.run(function(failures){
+					if (window.parent && parent.finish){
+						parent.finish(location.search, failures)
+					}
+				})
+			}
+			script.onload = load
+			script.onreadystatechange = function(){
+				if (this.readyState == 'complete' || this.readyState == 'loaded') load()
+			}
+
+			document.body.appendChild(script)
+
+		</script>
+
+	</body>
+</html>

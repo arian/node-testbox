@@ -1,0 +1,24 @@
+{
+  "author": "Arian Stolwijk",
+  "name": "testbox",
+  "description": "Run all your browser tests instantly, sandboxed",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/arian/node-testbox.git"
+  },
+  "main": "./index",
+  "dependencies": {
+    "wrapup": "*",
+    "express": "*",
+    "mocha": ">=1.0.1",
+    "expect.js": "*",
+    "mime": "*",
+    "ejs": "*"
+  },
+  "devDependencies": {},
+  "optionalDependencies": {},
+  "engines": {
+    "node": "*"
+  }
+}
