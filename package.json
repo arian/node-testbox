@@ -9,12 +9,14 @@
   },
   "main": "./index",
   "dependencies": {
-    "wrapup": "*",
+    "wrapup": "0.9.5",
     "express": "*",
     "mocha": ">=1.0.1",
     "expect.js": "*",
     "mime": "*",
-    "ejs": "*"
+    "ejs": "*",
+    "socket.io": "0.9",
+    "colors": "*"
   },
   "devDependencies": {},
   "optionalDependencies": {},

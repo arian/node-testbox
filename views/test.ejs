@@ -14,7 +14,10 @@
 
 		<script>
 
-			mocha.setup('bdd')
+			mocha.setup({
+				ui: 'bdd',
+				ignoreLeaks: true // ignore, because of iframes in the window with IE
+			})
 
 			var script = document.createElement('script')
 			script.src = './test.js' + location.search

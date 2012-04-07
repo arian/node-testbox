@@ -25,6 +25,16 @@
 		<script src="./mocha.js"></script>
 		<script src="./expect.js"></script>
 
+		<% if (capture){ %>
+		<script src="/socket.io/socket.io.js"></script>
+		<script type="text/javascript">
+		var socket = io.connect();
+		socket.on('reload', function(){
+			history.go(0);
+		});
+		</script>
+		<% } %>
+
 	</head>
 	<body>
 
@@ -40,9 +50,9 @@
 			var queries = location.search
 				? location.search.slice(1).split(',')
 				: []
-			<% if (tests.length){ %>
+			//<% if (tests.length){ %>
 			queries = "<%= tests %>".split(',')
-			<% } %>
+			//<% } %>
 			var dones = {}
 
 			var finish = function(search, result){
@@ -51,7 +61,7 @@
 
 			describe('All test suites', function(){
 
-				for (var i = 0; i < queries.length; i++) (function(query){
+				for (var i = 0; i < queries.length; i++) (function(query, i){
 
 					var iframe = document.createElement('iframe'),
 						search = '?test=' + encodeURI(query) + '&t=' + (+new Date).toString(36),
@@ -77,13 +87,20 @@
 						iframe.src = src
 					})
 
-				})(queries[i])
+				})(queries[i], i)
 
 			})
 
-			mocha.run()
+			mocha.run(function(failures){
+				// <% if (capture){ %>
+				socket.emit('results', {
+					failures: failures,
+					ua: navigator.userAgent
+				})
+				// <% } %>
+			})
 
 		</script>
 
-	</body>
+		</body>
 </html>
